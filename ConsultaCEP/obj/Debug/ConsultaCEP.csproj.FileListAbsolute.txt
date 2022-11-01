@@ -1,0 +1,11 @@
+C:\Users\User\Documents\Projetos Tiago\ConsultaCEP\ConsultaCEP\bin\Debug\ConsultaCEP.exe.config
+C:\Users\User\Documents\Projetos Tiago\ConsultaCEP\ConsultaCEP\bin\Debug\ConsultaCEP.exe
+C:\Users\User\Documents\Projetos Tiago\ConsultaCEP\ConsultaCEP\bin\Debug\ConsultaCEP.pdb
+C:\Users\User\Documents\Projetos Tiago\ConsultaCEP\ConsultaCEP\bin\Debug\Correios.dll
+C:\Users\User\Documents\Projetos Tiago\ConsultaCEP\ConsultaCEP\bin\Debug\Correios.pdb
+C:\Users\User\Documents\Projetos Tiago\ConsultaCEP\ConsultaCEP\obj\Debug\ConsultaCEP.csproj.AssemblyReference.cache
+C:\Users\User\Documents\Projetos Tiago\ConsultaCEP\ConsultaCEP\obj\Debug\ConsultaCEP.csproj.SuggestedBindingRedirects.cache
+C:\Users\User\Documents\Projetos Tiago\ConsultaCEP\ConsultaCEP\obj\Debug\ConsultaCEP.csproj.CoreCompileInputs.cache
+C:\Users\User\Documents\Projetos Tiago\ConsultaCEP\ConsultaCEP\obj\Debug\ConsultaCEP.csproj.CopyComplete
+C:\Users\User\Documents\Projetos Tiago\ConsultaCEP\ConsultaCEP\obj\Debug\ConsultaCEP.exe
+C:\Users\User\Documents\Projetos Tiago\ConsultaCEP\ConsultaCEP\obj\Debug\ConsultaCEP.pdb
