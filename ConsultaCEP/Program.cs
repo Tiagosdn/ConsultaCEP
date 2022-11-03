@@ -1,7 +1,10 @@
 ﻿using Correios;
 using Correios.CorreiosServiceReference;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 
 namespace ConsultaCEP
@@ -14,40 +17,99 @@ namespace ConsultaCEP
             Console.WriteLine("Digite o CEP desejado: ");
             string cep = Console.ReadLine();
 
-            if (string.IsNullOrEmpty(cep))
+            while (string.IsNullOrEmpty(cep))
             {
-                Console.WriteLine("Por favor, informe o CEP desejado!");
-                Console.Read();
-                return;
+                Console.WriteLine("\n");
+                Console.WriteLine("Por favor, informe novamente o CEP desejado:");
+                cep = Console.ReadLine();
             }
 
-            ConsultaCEPTiago(cep);
-            
+            while (cep.Length != 8)
+            {
+                Console.WriteLine("\n");
+                Console.WriteLine("Por favor, informe um CEP valido:");
+                cep = Console.ReadLine();
+            }
 
-
+            ConsultaCEP(cep);
             Console.Read();
         }
 
-        private static object ConsultaCEPTiago(string cep)
+        private static void ConsultaCEP(string cep)
         {
             HttpClient client = new HttpClient();
             //chamando a api pela url
             HttpResponseMessage response = client.GetAsync(string.Format("{0}{1}", urlApiCep, cep)).Result;
 
             //se retornar com sucesso busca os dados
-            if (response.IsSuccessStatusCode)
+            if (HttpStatusCode.OK == response.StatusCode)
             {
+                Console.WriteLine("\n");
                 //Pegando os dados do Rest e armazenando na variável usuários
-                var retorno = response.Content.ReadAsStringAsync().Result;
+                string retorno = response.Content.ReadAsStringAsync().Result;
 
-                Console.WriteLine(retorno);
+                EnderecoAPI endAPI = JsonConvert.DeserializeObject<EnderecoAPI>(retorno);
+
+                if (endAPI == null)
+                {
+                    Console.WriteLine("Problemas ao converter o valor retornado:\n");
+                    return;
+                }
+                
+                Console.WriteLine("O endereço encontrado para o CEP {0} foi:\n", cep);
+                Console.WriteLine("Logradouro: {0}\nBairro: {1}\nCidade: {2}\nEstado: {3}\nDDD: {4}\n", endAPI.address, endAPI.district, endAPI.city, endAPI.state, endAPI.ddd);
+                Console.WriteLine("Deseja pesquisar um novo CEP? (digite S para Sim e N para Não)");
+                string pesquisarNovamente = Console.ReadLine();
+                while (string.IsNullOrEmpty(pesquisarNovamente))
+                {
+                    Console.WriteLine("Deseja pesquisar um novo CEP? (digite S para Sim e N para Não)");
+                    pesquisarNovamente = Console.ReadLine();
+                }
+
+                while (pesquisarNovamente.ToLower() != "s" && pesquisarNovamente.ToLower() != "n")
+                {
+                    Console.WriteLine("Deseja pesquisar um novo CEP? (digite S para Sim e N para Não)");
+                    pesquisarNovamente = Console.ReadLine();
+                }
+
+                if (pesquisarNovamente.ToLower() == "s")
+                {
+                    Console.WriteLine("Digite o CEP desejado: ");
+                    string newCep = Console.ReadLine();
+
+                    while (string.IsNullOrEmpty(newCep))
+                    {
+                        Console.WriteLine("\n");
+                        Console.WriteLine("Por favor, informe novamente o CEP desejado:");
+                        newCep = Console.ReadLine();
+                    }
+
+                    while (newCep.Length != 8)
+                    {
+                        Console.WriteLine("\n");
+                        Console.WriteLine("Por favor, informe um CEP valido:");
+                        newCep = Console.ReadLine();
+                    }
+
+                    ConsultaCEP(newCep);
+                }
+            }
+            else if (HttpStatusCode.BadRequest == response.StatusCode)
+            {
+                Console.WriteLine("\n");
+                Console.WriteLine("O CEP {0} informado é invalido. Por favor, informe um CEP valido:", cep);
+            }
+            else if (HttpStatusCode.NotFound == response.StatusCode)
+            {
+                Console.WriteLine("\n");
+                Console.WriteLine("O CEP {0} informado não foi encontrado.", cep);
             }
             else
             {
-                Console.WriteLine("CEP não encontrado!");
+                Console.WriteLine("\n");
+                Console.WriteLine("Problemas ao procurar o CEP {0}", cep);
             }
-            return null;
-        }
+        } 
 
         private static void ConsultaCEPNuget()
         {
@@ -78,6 +140,21 @@ namespace ConsultaCEP
             //{
             //    Console.WriteLine("CEP INESISTENTE");
             //}
+        }
+
+        private class EnderecoAPI
+        {
+            public string cep { get; set; }
+            public string address_type { get; set; }
+            public string address_name { get; set; }
+            public string address { get; set; }
+            public string state { get; set; }
+            public string district { get; set; }
+            public string lat { get; set; }
+            public string lng { get; set; }
+            public string city { get; set; }
+            public string city_ibge { get; set; }
+            public string ddd { get; set; }
         }
     }
 }
